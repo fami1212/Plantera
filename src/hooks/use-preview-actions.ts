@@ -35,8 +35,9 @@ export const usePreviewActions = ({
     setIsActionInProgress(true);
     
     try {
+      // Corrigé: transmis columns comme objet et non comme string
       await printModuleData(moduleName, {
-        columns: columns,
+        columns,
         title: title || `Aperçu - ${moduleName}`
       });
       toast.success("Document envoyé à l'impression", {
@@ -76,9 +77,10 @@ export const usePreviewActions = ({
     setIsActionInProgress(true);
     
     try {
-      await exportModuleData(moduleName, 'pdf', data, {
+      // Corrigé: enlevé le paramètre data qui cause l'erreur et utilise les bons arguments
+      await exportModuleData(moduleName, 'pdf', {
         title: title || `Rapport - ${moduleName}`,
-        columns: columns
+        columns
       });
       toast.success("PDF généré avec succès", {
         description: "Le document a été téléchargé."

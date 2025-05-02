@@ -1,7 +1,15 @@
 
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useEffect } from "react";
+import { CRMProvider } from "./contexts/CRMContext";
+import { StatisticsProvider } from "./contexts/StatisticsContext";
+import { AppSettingsProvider } from "./contexts/AppSettingsContext";
+import { trackPageView } from "./utils/analytics";
+import { Toaster } from 'sonner';
+
+// Pages
 import Index from "./pages/Index";
 import ParcelsPage from "./pages/ParcelsPage";
 import ParcelsDetailsPage from "./pages/ParcelsDetailsPage";
@@ -11,12 +19,6 @@ import FinancePage from "./pages/FinancePage";
 import StatsPage from "./pages/StatsPage";
 import NotFound from "./pages/NotFound";
 import ProfilePage from "./pages/ProfilePage";
-import { useEffect } from "react";
-import { CRMProvider } from "./contexts/CRMContext";
-import { StatisticsProvider } from "./contexts/StatisticsContext";
-import { AppSettingsProvider } from "./contexts/AppSettingsContext";
-import { trackPageView } from "./utils/analytics";
-import { Toaster } from 'sonner';
 
 // Define routes configuration with redirects
 const routes = [
@@ -47,12 +49,14 @@ const queryClient = new QueryClient({
 
 // Router change handler component
 const RouterChangeHandler = () => {
+  const location = useLocation();
+  
   useEffect(() => {
     // Scroll to top on route change
     window.scrollTo(0, 0);
     
     // Track page view for analytics
-    const currentPath = window.location.pathname;
+    const currentPath = location.pathname;
     const pageName = currentPath === '/' ? 'dashboard' : currentPath.replace(/^\//, '');
     trackPageView(pageName);
   }, [location.pathname]);
@@ -78,7 +82,12 @@ const App = () => {
                   />
                 ))}
               </Routes>
-              <Toaster position="top-right" richColors closeButton />
+              <Toaster 
+                position="top-right" 
+                richColors 
+                closeButton 
+                theme="system" // Utilise le theme system pour s'adapter au mode sombre
+              />
             </TooltipProvider>
           </BrowserRouter>
         </CRMProvider>
