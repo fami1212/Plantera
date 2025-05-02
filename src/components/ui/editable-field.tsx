@@ -97,7 +97,7 @@ export const EditableField = ({
             value={inputValue as string}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            className={`px-2 py-1 border rounded-md focus:ring-1 focus:ring-primary focus:outline-none ${inputClassName}`}
+            className={`px-2 py-1 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-1 focus:ring-primary focus:outline-none ${inputClassName}`}
           >
             {options.map((option) => (
               <option key={option.value} value={option.value}>
@@ -112,21 +112,21 @@ export const EditableField = ({
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            className={`px-2 py-1 border rounded-md focus:ring-1 focus:ring-primary focus:outline-none ${inputClassName}`}
+            className={`px-2 py-1 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-1 focus:ring-primary focus:outline-none ${inputClassName}`}
             placeholder={placeholder}
           />
         )}
         <div className="flex items-center">
           <button 
             onClick={handleSave} 
-            className="p-1 text-agri-success hover:bg-agri-success/10 rounded-full"
+            className="p-1 text-agri-success dark:text-green-400 hover:bg-agri-success/10 dark:hover:bg-green-900/30 rounded-full"
             aria-label="Enregistrer"
           >
             <Check className="h-4 w-4" />
           </button>
           <button 
             onClick={handleCancel} 
-            className="p-1 text-agri-danger hover:bg-agri-danger/10 rounded-full"
+            className="p-1 text-agri-danger dark:text-red-400 hover:bg-agri-danger/10 dark:hover:bg-red-900/30 rounded-full"
             aria-label="Annuler"
           >
             <X className="h-4 w-4" />
@@ -138,19 +138,19 @@ export const EditableField = ({
 
   return (
     <div 
-      className={`group cursor-pointer hover:bg-muted/30 px-2 py-1 rounded flex items-center justify-between ${className}`}
+      className={`group cursor-pointer hover:bg-muted/30 dark:hover:bg-gray-700/50 px-2 py-1 rounded flex items-center justify-between ${className}`}
       onClick={handleClick}
     >
       <div className="flex items-center gap-2">
-        {icon && <span className="text-muted-foreground">{icon}</span>}
+        {icon && <span className="text-muted-foreground dark:text-gray-400">{icon}</span>}
         <span>
           {value ? formatValue(value) : (
-            <span className="text-muted-foreground italic">{placeholder}</span>
+            <span className="text-muted-foreground dark:text-gray-500 italic">{placeholder}</span>
           )}
         </span>
       </div>
       {showEditIcon && (
-        <Pencil className="h-3.5 w-3.5 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+        <Pencil className="h-3.5 w-3.5 text-muted-foreground dark:text-gray-500 opacity-0 group-hover:opacity-100 transition-opacity" />
       )}
     </div>
   );

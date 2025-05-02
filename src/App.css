@@ -7,6 +7,27 @@
   text-align: left;
 }
 
+/* Dark mode specific overrides */
+.dark {
+  color-scheme: dark;
+}
+
+.dark input,
+.dark select,
+.dark textarea {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  border-color: hsl(var(--border));
+}
+
+.dark .bg-white {
+  background-color: hsl(var(--background));
+}
+
+.dark .text-black {
+  color: hsl(var(--foreground));
+}
+
 /* Animation for spinning logos */
 @keyframes logo-spin {
   from {

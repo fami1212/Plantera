@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { EditableField } from './editable-field';
 import { ChevronDown, Edit, Trash2, Plus } from 'lucide-react';
@@ -76,8 +77,8 @@ export const EditableTable = ({
   };
 
   const getRowClass = (row: Record<string, any>) => {
-    if (row.status === 'critical') return 'bg-red-50';
-    if (row.status === 'warning') return 'bg-yellow-50';
+    if (row.status === 'critical') return 'bg-red-50 dark:bg-red-900/20';
+    if (row.status === 'warning') return 'bg-yellow-50 dark:bg-yellow-900/20';
     return '';
   };
 
@@ -86,22 +87,22 @@ export const EditableTable = ({
       case 'Haute':
       case 'Élevée':
       case 'Urgente':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300';
       case 'Moyenne':
-        return 'bg-orange-100 text-orange-800';
+        return 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300';
       case 'Basse':
       case 'Faible':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300';
     }
   };
 
   return (
-    <div className={`bg-white rounded-xl border overflow-hidden ${className}`}>
+    <div className={`bg-white dark:bg-gray-800 dark:text-gray-100 rounded-xl border dark:border-gray-700 overflow-hidden ${className}`}>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          <thead className="bg-muted text-xs uppercase">
+          <thead className="bg-muted text-xs uppercase dark:bg-gray-700 dark:text-gray-300">
             <tr>
               {columns.map((column) => (
                 <th 
@@ -111,7 +112,7 @@ export const EditableTable = ({
                 >
                   {sortable ? (
                     <button 
-                      className="flex items-center" 
+                      className="flex items-center dark:text-gray-300" 
                       onClick={() => handleSort(column.accessorKey)}
                     >
                       {column.header}
@@ -133,7 +134,7 @@ export const EditableTable = ({
           </thead>
           <tbody>
             {sortedData.map((row, rowIndex) => (
-              <tr key={rowIndex} className={`border-t hover:bg-muted/30 ${getRowClass(row)}`}>
+              <tr key={rowIndex} className={`border-t dark:border-gray-700 hover:bg-muted/30 dark:hover:bg-gray-700/50 ${getRowClass(row)}`}>
                 {columns.map((column) => (
                   <td key={`${rowIndex}-${column.id}`} className="px-4 py-3">
                     {column.isEditable ? (
@@ -170,7 +171,7 @@ export const EditableTable = ({
                         <button 
                           key={index}
                           onClick={() => action.onClick(rowIndex)}
-                          className="p-1.5 hover:bg-muted rounded"
+                          className="p-1.5 hover:bg-muted dark:hover:bg-gray-600 rounded"
                           title={action.label}
                         >
                           {action.icon}
@@ -179,7 +180,7 @@ export const EditableTable = ({
                       {onDelete && (
                         <button 
                           onClick={() => onDelete(rowIndex)}
-                          className="p-1.5 hover:bg-agri-danger/10 text-agri-danger rounded"
+                          className="p-1.5 hover:bg-agri-danger/10 dark:hover:bg-red-900/30 text-agri-danger dark:text-red-400 rounded"
                           title="Supprimer"
                         >
                           <Trash2 className="h-4 w-4" />
@@ -192,7 +193,7 @@ export const EditableTable = ({
             ))}
             {data.length === 0 && (
               <tr>
-                <td colSpan={columns.length + ((onDelete || actions.length > 0) ? 1 : 0)} className="px-4 py-4 text-center text-muted-foreground">
+                <td colSpan={columns.length + ((onDelete || actions.length > 0) ? 1 : 0)} className="px-4 py-4 text-center text-muted-foreground dark:text-gray-400">
                   Aucune donnée disponible
                 </td>
               </tr>
@@ -202,7 +203,7 @@ export const EditableTable = ({
       </div>
       
       {onAdd && (
-        <div className="p-4 border-t">
+        <div className="p-4 border-t dark:border-gray-700">
           <button 
             onClick={handleAddRow}
             className="flex items-center px-4 py-2 text-sm bg-agri-primary text-white rounded-lg hover:bg-agri-primary-dark"

@@ -42,13 +42,13 @@ export const generatePreviewHTML = (
         return `<td class="px-4 py-2 border-b dark:border-gray-600">${value}</td>`;
       }
     ).join('');
-    return `<tr>${cells}</tr>`;
+    return `<tr class="dark:hover:bg-gray-800 hover:bg-gray-50">${cells}</tr>`;
   }).join('');
   
-  // Navigation buttons for the preview
+  // Navigation buttons for the preview with dark mode support
   const navigationButtons = `
     <div class="mt-6 flex justify-between">
-      <button onclick="window.history.back()" class="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded">
+      <button onclick="window.history.back()" class="px-3 py-1 text-sm bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-200 rounded">
         ← Retour
       </button>
       <button onclick="window.print()" class="px-3 py-1 text-sm bg-blue-600 hover:bg-blue-700 text-white rounded">

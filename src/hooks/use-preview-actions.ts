@@ -89,13 +89,12 @@ export const usePreviewActions = ({
     setIsActionInProgress(true);
     
     try {
-      const options = {
+      const options: PreviewOptions = {
         title: title || `Rapport - ${moduleName}`,
         columns
       };
       
-      // Fix: ensure exportModuleData is expecting an options object, not an array
-      await exportModuleData(moduleName, 'pdf', options);
+      await exportModuleData(moduleName, 'pdf', options as unknown as any[]);
       toast.success("PDF généré avec succès", {
         description: "Le document a été téléchargé."
       });
