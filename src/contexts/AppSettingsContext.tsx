@@ -30,7 +30,7 @@ interface AppSettingsContextType {
   settings: AppSettings;
   updateSetting: (key: string, value: any) => void;
   updateSettings: (newSettings: Partial<AppSettings>) => void;
-  updateNestedSetting: (section: string, key: string, value: any) => void;
+  updateNestedSetting: (section: keyof AppSettings, key: string, value: any) => void;
   toggleDarkMode: () => void;
 }
 
@@ -105,13 +105,20 @@ export const AppSettingsProvider: React.FC<AppSettingsProviderProps> = ({ childr
       // Create a copy of the current settings
       const updatedSettings = { ...prevSettings };
       
-      // Safely handle the nested section
-      if (section === 'theme' || section === 'notifications' || section === 'privacy') {
-        const sectionData = prevSettings[section] || {};
-        
-        // Create a new object for the section to avoid direct mutation
-        updatedSettings[section] = {
-          ...sectionData,
+      // Fix: Type-safe handling of nested settings
+      if (section === 'theme') {
+        updatedSettings.theme = {
+          ...(prevSettings.theme || {}),
+          [key]: value
+        };
+      } else if (section === 'notifications') {
+        updatedSettings.notifications = {
+          ...(prevSettings.notifications || {}),
+          [key]: value
+        };
+      } else if (section === 'privacy') {
+        updatedSettings.privacy = {
+          ...(prevSettings.privacy || {}),
           [key]: value
         };
       }
