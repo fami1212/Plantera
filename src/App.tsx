@@ -10,11 +10,13 @@ import InventoryPage from "./pages/InventoryPage";
 import FinancePage from "./pages/FinancePage";
 import StatsPage from "./pages/StatsPage";
 import NotFound from "./pages/NotFound";
+import ProfilePage from "./pages/ProfilePage";
 import { useEffect } from "react";
 import { CRMProvider } from "./contexts/CRMContext";
 import { StatisticsProvider } from "./contexts/StatisticsContext";
 import { AppSettingsProvider } from "./contexts/AppSettingsContext";
 import { trackPageView } from "./utils/analytics";
+import { Toaster } from 'sonner';
 
 // Define routes configuration with redirects
 const routes = [
@@ -26,7 +28,7 @@ const routes = [
   { path: "/finances", element: <FinancePage /> },
   { path: "/statistiques", element: <StatisticsProvider><StatsPage /></StatisticsProvider> },
   { path: "/rapports", element: <Navigate to="/statistiques" replace /> },
-  { path: "/parametres", element: <Navigate to="/" replace /> },
+  { path: "/parametres", element: <ProfilePage /> },
   { path: "/dashboard", element: <Navigate to="/" replace /> },
   { path: "*", element: <NotFound /> }
 ];
@@ -76,6 +78,7 @@ const App = () => {
                   />
                 ))}
               </Routes>
+              <Toaster position="top-right" richColors closeButton />
             </TooltipProvider>
           </BrowserRouter>
         </CRMProvider>

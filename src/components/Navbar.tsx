@@ -15,12 +15,17 @@ import {
   ChevronRight,
   Settings,
   Users,
-  FileText
+  FileText,
+  UserCircle,
+  Bell
 } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
+import { Badge } from './ui/badge';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [notifications, setNotifications] = useState<number>(3);
   const location = useLocation();
   
   // Close mobile menu when route changes
@@ -60,7 +65,7 @@ const Navbar = () => {
     { title: 'Finances', path: '/finances', icon: Wallet },
     { title: 'Statistiques', path: '/statistiques', icon: BarChart2 },
     { title: 'Rapports', path: '/rapports', icon: FileText },
-    { title: 'Paramètres', path: '/parametres', icon: Settings },
+    { title: 'Paramètres', path: '/parametres', icon: UserCircle },
   ];
 
   const isActive = (path: string) => {
@@ -84,30 +89,44 @@ const Navbar = () => {
 
       {/* Sidebar Navigation with improved animation and transitions */}
       <aside 
-        className={`fixed inset-y-0 left-0 z-40 w-64 bg-white dark:bg-gray-900 border-r border-border shadow-lg transform transition-transform duration-300 ease-in-out ${
+        className={`fixed inset-y-0 left-0 z-40 w-72 bg-white dark:bg-gray-900 border-r border-border shadow-lg transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         } md:relative md:translate-x-0 flex flex-col h-full overflow-y-auto`}
       >
-        <div className="p-4 border-b border-border flex items-center justify-between">
+        <div className="p-5 border-b border-border flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-2">
-            <Sprout className="h-6 w-6 text-agri-primary" />
-            <span className="text-lg font-bold text-foreground">Agri Dom</span>
+            <div className="h-8 w-8 rounded-md bg-gradient-to-br from-agri-primary to-agri-primary-light flex items-center justify-center text-white font-bold">
+              <Sprout className="h-5 w-5" />
+            </div>
+            <span className="text-xl font-bold text-foreground bg-gradient-to-r from-agri-primary to-agri-primary-dark bg-clip-text text-transparent">Agri Dom</span>
           </Link>
-          <button 
-            onClick={toggleTheme} 
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            aria-label="Toggle theme"
-          >
-            {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
+          <div className="flex items-center space-x-2">
+            <button 
+              onClick={toggleTheme} 
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              aria-label="Toggle theme"
+            >
+              {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+            <div className="relative">
+              <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                <Bell size={18} />
+                {notifications > 0 && (
+                  <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs">
+                    {notifications}
+                  </Badge>
+                )}
+              </button>
+            </div>
+          </div>
         </div>
 
-        <nav className="flex-1 py-4 px-3 space-y-1 overflow-y-auto">
+        <nav className="flex-1 py-6 px-4 space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
           {navItems.map((item) => (
             <Link
               key={item.path}
               to={item.path}
-              className={`nav-link flex items-center space-x-3 py-3 px-4 rounded-lg transition-colors ${
+              className={`nav-link flex items-center space-x-3 py-3 px-4 rounded-xl transition-colors ${
                 isActive(item.path) 
                   ? 'bg-agri-primary/10 text-agri-primary font-medium' 
                   : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-foreground'
@@ -115,7 +134,7 @@ const Navbar = () => {
               onClick={() => setIsOpen(false)}
             >
               <item.icon className={`h-5 w-5 ${isActive(item.path) ? 'text-agri-primary' : ''}`} />
-              <span>{item.title}</span>
+              <span className="font-medium">{item.title}</span>
               
               {isActive(item.path) && (
                 <div className="ml-auto flex items-center">
@@ -127,13 +146,14 @@ const Navbar = () => {
           ))}
         </nav>
 
-        <div className="p-4 border-t border-border">
-          <div className="flex items-center space-x-3 px-3 py-2">
-            <div className="w-8 h-8 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center">
-              <span className="text-sm font-medium">AD</span>
-            </div>
+        <div className="p-4 border-t border-border mt-auto">
+          <div className="flex items-center space-x-3 px-3 py-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors cursor-pointer">
+            <Avatar>
+              <AvatarImage src="/placeholder.svg" alt="Profile" />
+              <AvatarFallback className="bg-agri-primary text-white">AD</AvatarFallback>
+            </Avatar>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">Utilisateur</p>
+              <p className="text-sm font-medium truncate">Jean Dupont</p>
               <p className="text-xs text-muted-foreground truncate">agriculteur@example.com</p>
             </div>
           </div>
