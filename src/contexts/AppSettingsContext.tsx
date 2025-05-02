@@ -105,19 +105,26 @@ export const AppSettingsProvider: React.FC<AppSettingsProviderProps> = ({ childr
       // Create a copy of the current settings
       const updatedSettings = { ...prevSettings };
       
-      // Fix: Type-safe handling of nested settings
+      // Fix: Type-safe handling of nested settings with required properties
       if (section === 'theme') {
         updatedSettings.theme = {
           ...(prevSettings.theme || {}),
           [key]: value
         };
       } else if (section === 'notifications') {
+        // Ensure all required properties are present
         updatedSettings.notifications = {
+          email: prevSettings.notifications?.email ?? true,
+          push: prevSettings.notifications?.push ?? true,
+          sound: prevSettings.notifications?.sound ?? true,
           ...(prevSettings.notifications || {}),
           [key]: value
         };
       } else if (section === 'privacy') {
+        // Ensure all required properties are present
         updatedSettings.privacy = {
+          shareData: prevSettings.privacy?.shareData ?? false,
+          cookiesConsent: prevSettings.privacy?.cookiesConsent ?? true,
           ...(prevSettings.privacy || {}),
           [key]: value
         };

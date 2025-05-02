@@ -72,7 +72,7 @@ export const usePreviewActions = ({
       return;
     }
     
-    // Fix: Corrected parameter order to match preview-generator.ts
+    // Properly ordered parameters to match preview-generator.ts
     const html = generatePreviewHTML(data, moduleName, title, columns, settings.locale);
     setPreviewHTML(html);
     setPreviewOpen(true);
@@ -89,12 +89,12 @@ export const usePreviewActions = ({
     setIsActionInProgress(true);
     
     try {
-      const options: PreviewOptions = {
+      const options = {
         title: title || `Rapport - ${moduleName}`,
         columns
       };
       
-      // Fix: exportModuleData now correctly passes moduleName, format, and options
+      // Fix: ensure exportModuleData is expecting an options object, not an array
       await exportModuleData(moduleName, 'pdf', options);
       toast.success("PDF généré avec succès", {
         description: "Le document a été téléchargé."
