@@ -86,7 +86,8 @@ const App = () => {
                 position="top-right" 
                 richColors 
                 closeButton 
-                theme="system" // Utilise le theme system pour s'adapter au mode sombre
+                theme="system" // Uses system theme to adapt to dark mode
+                className="dark:bg-card dark:text-card-foreground"
               />
             </TooltipProvider>
           </BrowserRouter>

@@ -1,24 +1,29 @@
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 
+interface ThemeSettings {
+  primaryColor?: string;
+  fontSize?: 'small' | 'medium' | 'large';
+  compactMode?: boolean;
+}
+
+interface NotificationSettings {
+  email: boolean;
+  push: boolean;
+  sound: boolean;
+}
+
+interface PrivacySettings {
+  shareData: boolean;
+  cookiesConsent: boolean;
+}
+
 interface AppSettings {
   darkMode: boolean;
   locale: string;
-  theme?: {
-    primaryColor?: string;
-    fontSize?: 'small' | 'medium' | 'large';
-    compactMode?: boolean;
-  };
-  notifications?: {
-    email: boolean;
-    push: boolean;
-    sound: boolean;
-  };
-  privacy?: {
-    shareData: boolean;
-    cookiesConsent: boolean;
-  };
-  // Add other settings here
+  theme?: ThemeSettings;
+  notifications?: NotificationSettings;
+  privacy?: PrivacySettings;
 }
 
 interface AppSettingsContextType {
@@ -46,7 +51,6 @@ const defaultSettings: AppSettings = {
     shareData: false,
     cookiesConsent: true,
   },
-  // Default values for other settings
 };
 
 const AppSettingsContext = createContext<AppSettingsContextType>({
@@ -96,19 +100,17 @@ export const AppSettingsProvider: React.FC<AppSettingsProviderProps> = ({ childr
     }));
   };
 
-  // Fix the updateNestedSetting function with proper typing
-  const updateNestedSetting = (section: string, key: string, value: any) => {
+  const updateNestedSetting = (section: keyof AppSettings, key: string, value: any) => {
     setSettings((prevSettings) => {
       // Create a copy of the current settings
       const updatedSettings = { ...prevSettings };
       
       // Safely handle the nested section
-      const sectionData = updatedSettings[section as keyof AppSettings] as Record<string, any>;
-      
-      // If the section exists, update it
-      if (sectionData) {
+      if (section === 'theme' || section === 'notifications' || section === 'privacy') {
+        const sectionData = prevSettings[section] || {};
+        
         // Create a new object for the section to avoid direct mutation
-        updatedSettings[section as keyof AppSettings] = {
+        updatedSettings[section] = {
           ...sectionData,
           [key]: value
         };

@@ -21,41 +21,20 @@ import {
 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { Badge } from './ui/badge';
+import { useAppSettings } from '@/contexts/AppSettingsContext';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [notifications, setNotifications] = useState<number>(3);
   const location = useLocation();
+  const { settings, toggleDarkMode } = useAppSettings();
   
   // Close mobile menu when route changes
   useEffect(() => {
     setIsOpen(false);
   }, [location.pathname]);
   
-  // Handle theme toggle
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-      setIsDarkMode(true);
-      document.documentElement.classList.add('dark');
-    }
-  }, []);
-  
   const toggleSidebar = () => setIsOpen(!isOpen);
-  
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-    if (isDarkMode) {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-    } else {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-    }
-  };
 
   const navItems = [
     { title: 'Tableau de bord', path: '/', icon: Home },
@@ -80,7 +59,7 @@ const Navbar = () => {
       <div className="fixed top-4 left-4 z-50 md:hidden">
         <button 
           onClick={toggleSidebar} 
-          className="p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-all active:scale-95 dark:bg-gray-800 dark:hover:bg-gray-700"
+          className="p-2 bg-sidebar rounded-full shadow-md hover:bg-sidebar/90 transition-all active:scale-95"
           aria-label="Toggle navigation"
         >
           {isOpen ? <X size={20} /> : <Menu size={20} />}
@@ -89,27 +68,27 @@ const Navbar = () => {
 
       {/* Sidebar Navigation with improved animation and transitions */}
       <aside 
-        className={`fixed inset-y-0 left-0 z-40 w-72 bg-white dark:bg-gray-900 border-r border-border shadow-lg transform transition-transform duration-300 ease-in-out ${
+        className={`fixed inset-y-0 left-0 z-40 w-72 bg-sidebar text-sidebar-foreground border-r border-sidebar-border shadow-lg transform transition-transform duration-300 ease-in-out ${
           isOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         } md:relative md:translate-x-0 flex flex-col h-full overflow-y-auto`}
       >
-        <div className="p-5 border-b border-border flex items-center justify-between">
+        <div className="p-5 border-b border-sidebar-border flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-md bg-gradient-to-br from-agri-primary to-agri-primary-light flex items-center justify-center text-white font-bold">
+            <div className="h-8 w-8 rounded-md bg-gradient-to-br from-sidebar-primary to-agri-primary-light flex items-center justify-center text-white font-bold">
               <Sprout className="h-5 w-5" />
             </div>
-            <span className="text-xl font-bold text-foreground bg-gradient-to-r from-agri-primary to-agri-primary-dark bg-clip-text text-transparent">Agri Dom</span>
+            <span className="text-xl font-bold text-sidebar-foreground bg-gradient-to-r from-sidebar-primary to-agri-primary-dark bg-clip-text text-transparent">Agri Dom</span>
           </Link>
           <div className="flex items-center space-x-2">
             <button 
-              onClick={toggleTheme} 
-              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              onClick={toggleDarkMode} 
+              className="p-2 rounded-full hover:bg-sidebar-accent transition-colors"
               aria-label="Toggle theme"
             >
-              {isDarkMode ? <Sun size={18} /> : <Moon size={18} />}
+              {settings.darkMode ? <Sun size={18} /> : <Moon size={18} />}
             </button>
             <div className="relative">
-              <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+              <button className="p-2 rounded-full hover:bg-sidebar-accent transition-colors">
                 <Bell size={18} />
                 {notifications > 0 && (
                   <Badge variant="destructive" className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 text-xs">
@@ -121,36 +100,36 @@ const Navbar = () => {
           </div>
         </div>
 
-        <nav className="flex-1 py-6 px-4 space-y-2 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-700">
+        <nav className="flex-1 py-6 px-4 space-y-2 overflow-y-auto custom-scrollbar">
           {navItems.map((item) => (
             <Link
               key={item.path}
               to={item.path}
               className={`nav-link flex items-center space-x-3 py-3 px-4 rounded-xl transition-colors ${
                 isActive(item.path) 
-                  ? 'bg-agri-primary/10 text-agri-primary font-medium' 
-                  : 'hover:bg-gray-100 dark:hover:bg-gray-800 text-foreground'
+                  ? 'bg-sidebar-primary/10 text-sidebar-primary font-medium' 
+                  : 'hover:bg-sidebar-accent text-sidebar-foreground'
               }`}
               onClick={() => setIsOpen(false)}
             >
-              <item.icon className={`h-5 w-5 ${isActive(item.path) ? 'text-agri-primary' : ''}`} />
+              <item.icon className={`h-5 w-5 ${isActive(item.path) ? 'text-sidebar-primary' : ''}`} />
               <span className="font-medium">{item.title}</span>
               
               {isActive(item.path) && (
                 <div className="ml-auto flex items-center">
-                  <span className="h-2 w-2 rounded-full bg-agri-primary animate-pulse-slow"></span>
-                  <ChevronRight className="h-4 w-4 text-agri-primary ml-1" />
+                  <span className="h-2 w-2 rounded-full bg-sidebar-primary animate-pulse-slow"></span>
+                  <ChevronRight className="h-4 w-4 text-sidebar-primary ml-1" />
                 </div>
               )}
             </Link>
           ))}
         </nav>
 
-        <div className="p-4 border-t border-border mt-auto">
-          <div className="flex items-center space-x-3 px-3 py-3 bg-muted/50 rounded-lg hover:bg-muted transition-colors cursor-pointer">
+        <div className="p-4 border-t border-sidebar-border mt-auto">
+          <div className="flex items-center space-x-3 px-3 py-3 bg-sidebar-accent/50 rounded-lg hover:bg-sidebar-accent transition-colors cursor-pointer">
             <Avatar>
               <AvatarImage src="/placeholder.svg" alt="Profile" />
-              <AvatarFallback className="bg-agri-primary text-white">AD</AvatarFallback>
+              <AvatarFallback className="bg-sidebar-primary text-white">AD</AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium truncate">Jean Dupont</p>

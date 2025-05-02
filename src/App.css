@@ -1,4 +1,5 @@
-/* On ne garde que ce qui est nécessaire et on ajuste pour le mode sombre */
+
+/* Clean and minimal styles focused on dark mode compatibility */
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -6,6 +7,7 @@
   text-align: left;
 }
 
+/* Animation for spinning logos */
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
@@ -15,6 +17,7 @@
   }
 }
 
+/* Respect user preferences for reduced motion */
 @media (prefers-reduced-motion: no-preference) {
   .logo-spin {
     animation: logo-spin infinite 20s linear;

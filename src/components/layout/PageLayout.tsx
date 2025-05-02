@@ -12,9 +12,15 @@ const PageLayout = ({ children }: PageLayoutProps) => {
   const isMobile = useIsMobile();
   const { settings } = useAppSettings();
   
-  // Appliquer le mode sombre au body également pour éviter les bordures blanches
+  // Apply dark mode to both html and body to ensure full coverage
   useEffect(() => {
-    document.body.className = settings.darkMode ? 'dark bg-background text-foreground' : 'bg-background text-foreground';
+    if (settings.darkMode) {
+      document.documentElement.classList.add('dark');
+      document.body.className = 'dark bg-background text-foreground';
+    } else {
+      document.documentElement.classList.remove('dark');
+      document.body.className = 'bg-background text-foreground';
+    }
   }, [settings.darkMode]);
   
   return (

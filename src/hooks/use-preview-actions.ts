@@ -5,10 +5,20 @@ import { useAppSettings } from '@/contexts/AppSettingsContext';
 import { generatePreviewHTML } from '@/utils/preview-generator';
 import { toast } from 'sonner';
 
+interface Column {
+  key: string; 
+  header: string;
+}
+
+interface PreviewOptions {
+  columns?: Column[];
+  title?: string;
+}
+
 interface UsePreviewActionsProps {
   data: any[];
   moduleName: string;
-  columns?: { key: string, header: string }[];
+  columns?: Column[];
   title?: string;
 }
 
@@ -35,11 +45,12 @@ export const usePreviewActions = ({
     setIsActionInProgress(true);
     
     try {
-      // Corrigé: transmis columns comme objet et non comme string
-      await printModuleData(moduleName, {
+      const options: PreviewOptions = {
         columns,
         title: title || `Aperçu - ${moduleName}`
-      });
+      };
+      
+      await printModuleData(moduleName, options);
       toast.success("Document envoyé à l'impression", {
         description: "Votre document a été envoyé à l'imprimante."
       });
@@ -77,11 +88,12 @@ export const usePreviewActions = ({
     setIsActionInProgress(true);
     
     try {
-      // Corrigé: enlevé le paramètre data qui cause l'erreur et utilise les bons arguments
-      await exportModuleData(moduleName, 'pdf', {
+      const options: PreviewOptions = {
         title: title || `Rapport - ${moduleName}`,
         columns
-      });
+      };
+      
+      await exportModuleData(moduleName, 'pdf', options);
       toast.success("PDF généré avec succès", {
         description: "Le document a été téléchargé."
       });
